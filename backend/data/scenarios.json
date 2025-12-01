@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "scenario": "You are a barista who has to tell a customer that their latte is actually a portal to another dimension.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 2,
+    "scenario": "You are a time-travelling tour guide explaining modern smartphones to someone from the 1800s.",
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "scenario": "You are a restaurant waiter who must calmly tell a customer that their order has escaped the kitchen.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 4,
+    "scenario": "You are a customer trying to return an obviously cursed object to a very skeptical shop owner.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 5,
+    "scenario": "You are a tech support agent helping someone with a computer that has become sentient and refuses to work.",
+    "difficulty": "hard"
+  },
+  {
+    "id": 6,
+    "scenario": "You are a flight attendant on a plane that is flying to nowhere in particular, and you need to keep passengers calm.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 7,
+    "scenario": "You are a museum tour guide showing people around an exhibit of completely invisible art.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 8,
+    "scenario": "You are a chef who has to explain to a food critic that the soup they're eating has become self-aware.",
+    "difficulty": "hard"
+  },
+  {
+    "id": 9,
+    "scenario": "You are a librarian dealing with books that have started reading themselves out loud.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 10,
+    "scenario": "You are a taxi driver who only drives backwards, trying to convince a passenger this is completely normal.",
+    "difficulty": "easy"
+  },
+  {
+    "id": 11,
+    "scenario": "You are a real estate agent showing a house that clearly doesn't want to be sold and keeps changing rooms.",
+    "difficulty": "hard"
+  },
+  {
+    "id": 12,
+    "scenario": "You are a yoga instructor teaching a class where gravity has stopped working properly.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 13,
+    "scenario": "You are a pet store employee trying to sell someone a pet rock that won't stop talking.",
+    "difficulty": "easy"
+  },
+  {
+    "id": 14,
+    "scenario": "You are a weather forecaster reporting on weather that is happening in reverse.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 15,
+    "scenario": "You are a dentist who has to tell a patient that their teeth have formed a union and are going on strike.",
+    "difficulty": "hard"
+  },
+  {
+    "id": 16,
+    "scenario": "You are a parking attendant explaining to someone why their car has been replaced by a horse.",
+    "difficulty": "easy"
+  },
+  {
+    "id": 17,
+    "scenario": "You are a therapist counseling a superhero who is afraid of heights.",
+    "difficulty": "medium"
+  },
+  {
+    "id": 18,
+    "scenario": "You are a DJ at a silent disco where the music has become visible instead of audible.",
+    "difficulty": "hard"
+  },
+  {
+    "id": 19,
+    "scenario": "You are a lifeguard at a pool where the water has turned into jello.",
+    "difficulty": "easy"
+  },
+  {
+    "id": 20,
+    "scenario": "You are a fortune teller who can only predict things that happened yesterday.",
+    "difficulty": "medium"
+  }
+]

@@ -1,52 +1,54 @@
-# Voice Commerce - Backend (Python)
+# Improv Battle - Backend (Python)
 
-> 🛍️ **DAY 9 of the Murf AI Voice Agents Challenge**
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![LiveKit Agents](https://img.shields.io/badge/LiveKit-Agents-green)](https://livekit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
+
+> 🎭 **DAY 10 of the Murf AI Voice Agents Challenge**
 >
-> This backend powers the Voice Commerce shopping assistant - an AI-powered e-commerce agent that handles product browsing, search, and order placement through natural voice conversation.
+> This backend powers the Improv Battle game show - an AI-powered improv host that runs contestants through hilarious scenarios and reacts with honest, varied feedback.
 > Built with **Murf Falcon TTS** (fastest TTS API), **Google Gemini 2.5 Flash**, and **AssemblyAI STT**.
-> See the [main README](../README.md) for complete project details.
 
-## 🛒 What This Does
+[Main Project](../README.md) | [Frontend](../frontend/README.md)
 
-This backend implements a **Shopping Assistant AI** that:
+## 🎭 What This Does
 
-- **Browses** products with filters (category, price, color)
-- **Searches** products by keywords and descriptions
-- **Provides** detailed product information
-- **Places** orders with quantity and options (size, color)
-- **Persists** orders to JSON file storage
-- **Retrieves** order history and summaries
+This backend implements an **Improv Game Show Host AI** that:
+
+- **Welcomes** contestants and explains the game
+- **Announces** random improv scenarios dramatically
+- **Listens** to player performances
+- **Reacts** with varied, honest feedback (amused, critical, surprised)
+- **Manages** game state across 3-5 rounds
+- **Summarizes** player's improv style at the end
 
 ## 🏗️ Tech Stack
 
-- **LLM**: Google Gemini 2.5 Flash (conversation & product recommendations)
+- **LLM**: Google Gemini 2.5 Flash (conversation & reactions)
 - **TTS**: Murf Falcon (fastest TTS API - 20 seconds of audio in <1 second)
 - **STT**: AssemblyAI (speech-to-text)
 - **Framework**: LiveKit Agents Python SDK
 - **Turn Detection**: Multilingual Model (contextual speaker detection)
-- **Data Storage**: JSON files (products.json, orders.json)
+- **Data Storage**: JSON files (scenarios.json)
 
 ## ✨ Key Features
 
-- **5 Function Tools** - Complete e-commerce operations
-- **Product Catalog** - 13 products across 4 categories
-- **Smart Search** - Natural language product search
-- **Order Management** - Create and retrieve orders
-- **Data Persistence** - Orders saved to JSON
+- **4 Function Tools** - Complete game management
+- **20 Scenarios** - Wild, creative improv situations
+- **Varied Reactions** - Host doesn't repeat feedback style
+- **Game State** - Tracks rounds, scenarios, reactions
 - **Voice-Optimized** - Concise responses perfect for voice
-- **Auto-Greeting** - Welcomes customers and explains catalog
+- **Auto-Greeting** - Welcomes contestants and asks for name
 
 ## 📁 Project Structure
 
 ```
 backend/
 ├── src/
-│   ├── agent.py          # Main agent with 5 function tools
-│   ├── catalog.py        # Product catalog management
-│   └── orders.py         # Order management & persistence
+│   ├── agent.py          # Main improv host agent
+│   └── improv_state.py   # Game state management
 ├── data/
-│   ├── products.json     # Product catalog (13 products)
-│   └── orders.json       # Persisted orders
+│   └── scenarios.json    # 20 improv scenarios
 ├── .env.local            # API keys (not in git)
 ├── .env.example          # Example environment variables
 ├── pyproject.toml        # Python dependencies
@@ -55,75 +57,50 @@ backend/
 
 ## 🛠️ Function Tools
 
-### 1. `browse_products`
-Filter products by category, price range, and color.
+### 1. `start_new_round`
+Start a new improv round with a random scenario.
 
 ```python
-browse_products(
-    category="mug",      # Optional: mug, tshirt, hoodie, accessory
-    max_price=500,       # Optional: maximum price in INR
-    min_price=200,       # Optional: minimum price in INR
-    color="black"        # Optional: product color
-)
+start_new_round(player_name="John")  # First round only
+start_new_round()  # Subsequent rounds
 ```
 
-### 2. `search_products`
-Search products by keywords or description.
+### 2. `get_game_status`
+Get current game status and progress.
 
 ```python
-search_products(query="travel mug")
+get_game_status()
+# Returns: "Player: John, Round: 2/3, Phase: awaiting_improv"
 ```
 
-### 3. `get_product_details`
-Get detailed information about a specific product.
+### 3. `end_game_early`
+End the game early if player wants to stop.
 
 ```python
-get_product_details(product_id="mug-003")
+end_game_early()
 ```
 
-### 4. `place_order`
-Create an order for a product.
+### 4. `get_final_summary`
+Get complete game summary for final wrap-up.
 
 ```python
-place_order(
-    product_id="mug-003",  # Required: exact product ID
-    quantity=2,            # Optional: default 1
-    size="M",              # Optional: for clothing
-    color="black"          # Optional: if available
-)
+get_final_summary()
 ```
 
-### 5. `get_order_summary`
-Get complete summary of all orders in the session.
+## 🎭 Improv Scenarios
 
-```python
-get_order_summary()
-```
-
-## 📦 Product Catalog
-
-### Categories & Products
-
-**Mugs** (3 items)
-- Ceramic Coffee Mug - ₹299
-- Stainless Steel Travel Mug - ₹599
-- Glass Coffee Mug - ₹399
-
-**T-Shirts** (3 items)
-- Cotton T-Shirt Black - ₹499
-- Cotton T-Shirt White - ₹499
-- Cotton T-Shirt Grey - ₹499
-
-**Hoodies** (3 items)
-- Black Logo Hoodie - ₹1,499
-- Grey Logo Hoodie - ₹1,499
-- Navy Logo Hoodie - ₹1,499
-
-**Accessories** (4 items)
-- Baseball Cap - ₹399
-- Tote Bag - ₹599
-- Water Bottle - ₹349
-- Laptop Sticker Pack - ₹199
+20 creative scenarios including:
+- Barista explaining latte is a portal to another dimension
+- Time-travelling tour guide with someone from 1800s
+- Waiter explaining order escaped the kitchen
+- Customer returning cursed object
+- Tech support for sentient computer
+- Flight attendant on plane to nowhere
+- Museum guide for invisible art
+- Chef with self-aware soup
+- Librarian with books reading themselves
+- Taxi driver who only drives backwards
+- ...and 10 more!
 
 ## 🚀 Dev Setup
 
@@ -193,88 +170,58 @@ Speak to the agent directly in your terminal:
 uv run python src/agent.py console
 ```
 
-## 📊 Data Models
+## 📊 Game State Model
 
-### Product Schema
+### ImprovState Schema
 
-```json
+```python
 {
-  "id": "mug-003",
-  "name": "Glass Coffee Mug",
-  "description": "Elegant double-wall glass mug",
-  "price": 399,
-  "currency": "INR",
-  "category": "mug",
-  "attributes": {
-    "color": "transparent",
-    "material": "glass",
-    "capacity": "300ml"
-  }
-}
-```
-
-### Order Schema
-
-```json
-{
-  "id": "ORD-20251130153000",
-  "items": [
+  "room_name": "room-123",
+  "player_name": "John",
+  "current_round": 2,
+  "max_rounds": 3,
+  "phase": "awaiting_improv",  # intro | awaiting_improv | reacting | done
+  "scenarios_used": [1, 5, 12],
+  "rounds": [
     {
-      "product_id": "mug-003",
-      "product_name": "Glass Coffee Mug",
-      "quantity": 2,
-      "unit_price": 399,
-      "currency": "INR"
+      "round_number": 1,
+      "scenario": "You are a barista...",
+      "scenario_id": 1,
+      "player_performance": "",
+      "host_reaction": "That was hilarious!",
+      "completed": true
     }
-  ],
-  "total": 798,
-  "currency": "INR",
-  "status": "CONFIRMED",
-  "created_at": "2025-11-30T15:30:00Z"
+  ]
 }
-```
-
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-uv run pytest
 ```
 
 ## 🎯 Agent Instructions
 
-The agent is configured with comprehensive instructions for:
-- E-commerce product assistance
-- Natural voice conversation
-- Product browsing and search
-- Order placement and confirmation
-- Handling customer questions
-- Providing pricing information
+The agent is configured as a high-energy TV improv show host with:
+- Charismatic, witty personality
+- Varied reaction styles (amused, critical, surprised, teasing)
+- Clear scenario announcements
+- Honest but respectful feedback
+- Quick comedic timing
+- Game flow management
 
 See `src/agent.py` for the complete system prompt.
 
 ## 📝 Customization
 
-### Adding Products
+### Adding Scenarios
 
-Edit `data/products.json` to add new products:
+Edit `data/scenarios.json` to add new scenarios:
 
 ```json
 {
-  "id": "new-product-001",
-  "name": "New Product",
-  "description": "Product description",
-  "price": 999,
-  "currency": "INR",
-  "category": "category_name",
-  "attributes": {
-    "key": "value"
-  }
+  "id": 21,
+  "scenario": "Your custom improv scenario here",
+  "difficulty": "medium"
 }
 ```
 
-### Modifying Agent Behavior
+### Modifying Host Personality
 
 Update the system prompt in `src/agent.py` under the `Assistant` class `instructions` parameter.
 
@@ -292,6 +239,14 @@ tts=murf.TTS(
 
 Available Murf voices: matthew, sarah, emma, etc.
 
+### Adjusting Round Count
+
+Change `max_rounds` in `start_new_round` function call:
+
+```python
+start_game(room_name, player_name, max_rounds=5)  # 5 rounds instead of 3
+```
+
 ## 🚀 Deployment
 
 This project is production-ready and includes a working `Dockerfile`. Deploy to:
@@ -301,19 +256,95 @@ This project is production-ready and includes a working `Dockerfile`. Deploy to:
 
 See the [LiveKit deployment guide](https://docs.livekit.io/agents/ops/deployment/) for details.
 
+## 📊 Project Structure
+
+```
+backend/
+├── src/
+│   ├── agent.py              # Main improv host agent (300+ lines)
+│   ├── improv_state.py       # Game state management (200+ lines)
+│   └── __init__.py
+├── data/
+│   └── scenarios.json        # 20 improv scenarios
+├── .env.example              # Environment template
+├── .env.local                # Your API keys (gitignored)
+├── pyproject.toml            # Dependencies
+└── README.md
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Backend won't start**
+- Check Python version: `python --version` (need 3.12+)
+- Verify API keys in `.env.local`
+- Run `download-files` command first
+
+**Agent not responding**
+- Check all API keys are valid
+- Verify LiveKit server is running
+- Check backend logs for errors
+
+**Slow TTS**
+- Murf Falcon is the fastest TTS API
+- Check your internet connection
+- Verify MURF_API_KEY is correct
+
+## 🧪 Testing
+
+### Console Mode (No Frontend)
+```bash
+uv run python src/agent.py console
+```
+
+### Development Mode (With Frontend)
+```bash
+uv run python src/agent.py dev
+```
+
+### Production Mode
+```bash
+uv run python src/agent.py start
+```
+
+## 📈 Performance
+
+- **TTS Latency**: <1 second (Murf Falcon)
+- **STT Accuracy**: 95%+ (AssemblyAI)
+- **LLM Response**: 1-2 seconds (Gemini 2.5 Flash)
+- **Total Latency**: 2-3 seconds end-to-end
+
+## 🔐 Security
+
+- Never commit `.env.local` to git
+- Rotate API keys regularly
+- Use environment variables for all secrets
+- Enable rate limiting in production
+
 ## 🤝 Contributing
 
-This project is part of the Murf AI Voice Agents Challenge. Feel free to fork and adapt for your own voice commerce applications!
+Contributions are welcome! Feel free to open issues or pull requests.
 
 ## 👨‍💻 Author
 
 **Gangadhar**
 - GitHub: [@Gangadhar-NG-CODER](https://github.com/Gangadhar-NG-CODER)
+- LinkedIn: [Connect](https://linkedin.com/in/gangadhar)
 
 ## 📄 License
 
 MIT License - See [LICENSE](../LICENSE) file for details
 
+## 🙏 Acknowledgments
+
+- **Murf AI** - Falcon TTS API
+- **LiveKit** - Voice agent framework
+- **Google** - Gemini LLM
+- **AssemblyAI** - Speech recognition
+
 ---
 
-**Built with ❤️ for the Murf AI Voice Agents Challenge**
+**Built with ❤️ for the Murf AI Voice Agents Challenge - Day 10**
+
+[⬆ Back to Top](#improv-battle---backend-python)

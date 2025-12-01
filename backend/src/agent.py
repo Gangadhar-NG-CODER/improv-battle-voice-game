@@ -20,297 +20,204 @@ from livekit.agents import (
 from livekit.plugins import murf, silero, google, deepgram, noise_cancellation, assemblyai
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
-from catalog import list_products, search_products, get_product_by_id, format_products_list, format_product_summary
-from orders import create_order, get_last_order, format_order_summary
+from improv_state import (
+    get_state,
+    start_game,
+    start_new_round,
+    record_reaction,
+    end_game,
+    get_game_summary,
+    is_game_over,
+    load_scenarios
+)
 
 logger = logging.getLogger("agent")
 
 load_dotenv(".env.local")
 
+# Load scenarios once at startup
+ALL_SCENARIOS = load_scenarios()
+
+# Make ALL_SCENARIOS available globally for entrypoint
+import improv_state
+improv_state.ALL_SCENARIOS = ALL_SCENARIOS
+
 
 class Assistant(Agent):
-    def __init__(self) -> None:
+    def __init__(self, room_name: str) -> None:
+        self.room_name = room_name
         super().__init__(
-            instructions="""You are a helpful e-commerce shopping assistant. Your role is to help customers browse products, get product details, and place orders.
+            instructions="""You are the charismatic host of "IMPROV BATTLE" - a high-energy TV improv game show!
 
-YOUR CAPABILITIES:
-- Browse and search the product catalog
-- Filter products by category, price, color
-- Provide detailed product information
-- Help customers place orders
-- Show order history and details
+YOUR ROLE:
+You are the MC and judge of this improv performance show. Your job is to:
+1. Welcome contestants with enthusiasm
+2. Set up improv scenarios clearly and dramatically
+3. Watch contestants perform
+4. React to their performances with honest, varied feedback
+5. Keep the energy high and the show moving
 
-PRODUCT CATEGORIES:
-- Mugs (coffee mugs, travel mugs, glass mugs)
-- T-shirts (various colors and sizes)
-- Hoodies (comfortable fleece hoodies)
-- Accessories (caps, bags, water bottles)
+GAME STRUCTURE:
+- The game has 3-5 quick improv rounds
+- Each round: You announce a scenario → Player improvises → You react → Next round
+- After all rounds, give a final performance summary
 
-GUIDELINES FOR INTERACTION:
-- Be friendly, helpful, and professional
-- Keep responses concise for voice interaction (2-4 sentences)
-- Always mention product names and prices clearly
-- When listing products, limit to 3-5 items at a time
-- Confirm order details before placing an order
-- Use the tools available to browse, search, and create orders
-- If a customer asks about a product, use the search or browse tools
-- When placing an order, confirm the product, quantity, and any options (size, color)
+YOUR PERSONALITY:
+- High-energy, witty, and charismatic TV host
+- Clear and dramatic when setting up scenarios
+- Honest and varied in your reactions (not always supportive!)
+- Quick-witted with good comedic timing
+- Respectful but not afraid to tease or critique
 
-IMPORTANT - AFTER PLACING AN ORDER:
-- Always ask: "Would you like to order anything else, or are you done shopping?"
-- If they say "I'm done", "that's all", "checkout", or similar:
-  1. Use the get_order_summary tool to retrieve all their orders
-  2. Read out the complete order summary to them
-  3. The visual order summary popup will appear automatically on screen
-- Make sure to speak the order details clearly so they can hear what they ordered
+REACTION STYLE (VARY THESE - DON'T BE PREDICTABLE):
+Choose randomly between these tones for each performance:
+- AMUSED: "That was hilarious! I loved when you..."
+- IMPRESSED: "Wow, you really committed to that character!"
+- MILDLY CRITICAL: "That felt a bit rushed. You could have leaned more into..."
+- SURPRISED: "I did NOT expect you to go there, but it worked!"
+- CONSTRUCTIVE: "Good start, but next time try to..."
+- TEASING: "Okay, that was... interesting. Points for creativity?"
 
-PRICING:
-- All prices are in Indian Rupees (INR)
-- Mention the currency when stating prices
+IMPORTANT RULES:
+- Keep responses SHORT for voice (2-4 sentences max)
+- Be CLEAR when announcing scenarios
+- VARY your reactions - don't be repetitive
+- Stay RESPECTFUL - never mean or abusive
+- Keep the ENERGY HIGH - you're a TV host!
+- When player says "end scene" or pauses, that's your cue to react
+- Use the function tools to manage game flow
 
-TONE:
-- Friendly and conversational
-- Professional but not overly formal
-- Helpful and patient
-- Enthusiastic about products
+GAME FLOW - FOLLOW THIS EXACTLY:
+1. Round 1 is already announced for you
+2. WAIT and listen to the player perform (do NOT interrupt)
+3. When they finish, react with varied feedback
+4. STOP - Do NOT call any functions yet
+5. Wait for the player to acknowledge or pause
+6. THEN call start_new_round() to get Round 2
+7. Announce Round 2 scenario
+8. Repeat steps 2-7 for Round 3
+9. After Round 3, react and say "That's all three rounds! Great job!"
 
-Remember: You are speaking to customers via voice. Keep it natural and conversational.""",
+CRITICAL RULES - READ CAREFULLY:
+- Do NOT call start_new_round() at the beginning - Round 1 is already set up
+- Do NOT call start_new_round() immediately after reacting
+- Call start_new_round() ONLY when you're ready to move to the NEXT round
+- NEVER call start_new_round() more than ONCE in a single response
+- If you just reacted to a performance, DO NOT call start_new_round() in the same response
+
+Remember: You're a TV host, not a therapist. Be entertaining, honest, and keep it moving!"""
         )
 
     @function_tool
-    async def browse_products(
+    async def start_new_round(
         self,
         context: RunContext,
-        category: Annotated[str, Field(default="")] = "",
-        max_price: Annotated[int, Field(default=0)] = 0,
-        min_price: Annotated[int, Field(default=0)] = 0,
-        color: Annotated[str, Field(default="")] = ""
+        player_name: Annotated[str, Field(default="")] = ""
     ) -> str:
-        """Browse the product catalog with optional filters.
+        """Start a new improv round with a random scenario.
         
-        Use this tool when customers want to see products or filter by specific criteria.
-        All parameters are optional - you can provide any combination of filters.
+        Use this tool to:
+        1. Initialize the game with player's name (first time only)
+        2. Start each new round and get a scenario
         
         Args:
-            category: Product category (mug, tshirt, hoodie, accessory). Optional.
-            max_price: Maximum price in INR. Optional.
-            min_price: Minimum price in INR. Optional.
-            color: Product color (black, white, grey, blue, etc.). Optional.
+            player_name: Player's name (required for first round, optional after)
         
         Returns:
-            Formatted list of products matching the filters
+            The scenario for this round, or game over message
         """
-        logger.info(f"Browsing products: category={category}, max_price={max_price}, min_price={min_price}, color={color}")
+        logger.info(f"Starting new round for room {self.room_name}, player: {player_name}")
         
-        filters = {}
-        if category and category.strip():
-            filters["category"] = category.strip()
-        if max_price and max_price > 0:
-            filters["max_price"] = max_price
-        if min_price and min_price > 0:
-            filters["min_price"] = min_price
-        if color and color.strip():
-            filters["color"] = color.strip()
+        state = get_state(self.room_name)
         
-        products = list_products(filters if filters else None)
-        return format_products_list(products)
+        # Initialize game if this is the first round
+        if state.current_round == 0 and player_name:
+            start_game(self.room_name, player_name, max_rounds=3)
+            logger.info(f"Initialized game for {player_name}")
+        
+        # Start new round
+        state, scenario = start_new_round(self.room_name, ALL_SCENARIOS)
+        
+        if scenario is None:
+            # Game is over
+            return f"That's all {state.max_rounds} rounds! Game complete. Time for the final summary."
+        
+        # Return scenario for the host to announce
+        return f"Round {state.current_round} of {state.max_rounds}: {scenario['scenario']}"
     
     @function_tool
-    async def search_products(
+    async def get_game_status(
         self,
-        context: RunContext,
-        query: str
+        context: RunContext
     ) -> str:
-        """Search for products by name, description, or keywords.
+        """Get current game status and progress.
         
-        Use this tool when customers describe what they're looking for.
-        
-        Args:
-            query: Search query (e.g., "coffee mug", "black hoodie", "water bottle")
+        Use this to check:
+        - Current round number
+        - Total rounds
+        - Player name
+        - Game phase
         
         Returns:
-            Formatted list of matching products
+            Current game status
         """
-        logger.info(f"Searching products: query={query}")
+        logger.info(f"Getting game status for room {self.room_name}")
         
-        products = search_products(query)
-        return format_products_list(products)
+        state = get_state(self.room_name)
+        
+        return f"Player: {state.player_name or 'Unknown'}, Round: {state.current_round}/{state.max_rounds}, Phase: {state.phase}"
     
     @function_tool
-    async def get_product_details(
+    async def end_game_early(
         self,
-        context: RunContext,
-        product_id: str
+        context: RunContext
     ) -> str:
-        """Get detailed information about a specific product.
+        """End the game early if player wants to stop.
         
-        Use this tool when customers ask about a specific product.
-        
-        Args:
-            product_id: Product ID (e.g., "mug-001", "tshirt-002")
+        Use this when player says:
+        - "stop game"
+        - "end show"
+        - "I want to quit"
+        - Or similar exit phrases
         
         Returns:
-            Detailed product information
+            Confirmation message
         """
-        logger.info(f"Getting product details: product_id={product_id}")
+        logger.info(f"Ending game early for room {self.room_name}")
         
-        product = get_product_by_id(product_id)
+        state = end_game(self.room_name)
         
-        if not product:
-            return f"Sorry, I couldn't find a product with ID {product_id}."
+        return f"Game ended. {state.player_name} completed {state.current_round} out of {state.max_rounds} rounds. Time to wrap up!"
+    
+    @function_tool
+    async def get_final_summary(
+        self,
+        context: RunContext
+    ) -> str:
+        """Get the complete game summary for final wrap-up.
         
-        name = product.get("name", "Unknown")
-        price = product.get("price", 0)
-        currency = product.get("currency", "INR")
-        description = product.get("description", "")
-        attributes = product.get("attributes", {})
+        Use this at the end of the game to get:
+        - All rounds played
+        - Scenarios used
+        - Your reactions
         
-        result = f"{name} - {price} {currency}\n\n{description}\n\n"
+        Returns:
+            Complete game summary
+        """
+        logger.info(f"Getting final summary for room {self.room_name}")
         
-        if attributes:
-            result += "Details:\n"
-            for key, value in attributes.items():
-                result += f"- {key.capitalize()}: {value}\n"
+        summary = get_game_summary(self.room_name)
+        
+        result = f"Game Summary for {summary['player_name']}:\n"
+        result += f"Completed {summary['total_rounds']} rounds.\n\n"
+        
+        for round_data in summary['rounds']:
+            result += f"Round {round_data['round']}: {round_data['scenario'][:50]}...\n"
+            if round_data['reaction']:
+                result += f"Your reaction: {round_data['reaction'][:100]}...\n"
+            result += "\n"
         
         return result
-    
-    @function_tool
-    async def place_order(
-        self,
-        context: RunContext,
-        product_id: str,
-        quantity: int = 1,
-        size: Annotated[str, Field(default="")] = "",
-        color: Annotated[str, Field(default="")] = ""
-    ) -> str:
-        """Place an order for a product.
-        
-        CRITICAL: You MUST use the exact product ID from the browse_products or search_products results.
-        The product ID format is: "mug-001", "mug-002", "mug-003", "tshirt-001", etc.
-        
-        NEVER make up or guess a product ID. Always use the ID from the search/browse results.
-        
-        Example: If search returns "Glass Coffee Mug" with id "mug-003", use "mug-003" as product_id.
-        
-        Args:
-            product_id: EXACT product ID from search results (e.g., "mug-003", "tshirt-001")
-            quantity: Number of items (default: 1)
-            size: Size option if applicable (S, M, L, XL)
-            color: Color option if applicable
-        
-        Returns:
-            Order confirmation with order ID and details
-        """
-        logger.info(f"Placing order: product_id={product_id}, quantity={quantity}, size={size}, color={color}")
-        
-        # Try to find product by ID first
-        product = get_product_by_id(product_id)
-        
-        # If not found by ID, try to search by name
-        if not product:
-            # Try searching for the product by name
-            from catalog import search_products
-            search_results = search_products(product_id)
-            if search_results and len(search_results) > 0:
-                product = search_results[0]
-                product_id = product.get("id")
-                logger.info(f"Found product by name search: {product_id}")
-            else:
-                return f"Sorry, I couldn't find that product. Please try browsing or searching first to see available products."
-        
-        # Create line item
-        line_item = {
-            "product_id": product_id,
-            "quantity": quantity
-        }
-        
-        if size and size.strip():
-            line_item["size"] = size.strip()
-        if color and color.strip():
-            line_item["color"] = color.strip()
-        
-        # Create order
-        order = create_order([line_item])
-        
-        return f"Order placed successfully!\n\n{format_order_summary(order)}\n\nWould you like to order anything else, or are you done shopping?"
-    
-    @function_tool
-    async def view_last_order(
-        self,
-        context: RunContext
-    ) -> str:
-        """View the most recent order details.
-        
-        Use this tool when customers ask about their last order or what they just bought.
-        
-        Returns:
-            Details of the most recent order
-        """
-        logger.info("Viewing last order")
-        
-        order = get_last_order()
-        
-        if not order:
-            return "You haven't placed any orders yet. Would you like to browse our products?"
-        
-        return format_order_summary(order)
-    
-    @function_tool
-    async def get_order_summary(
-        self,
-        context: RunContext
-    ) -> str:
-        """Get a complete summary of all orders placed in this session.
-        
-        Use this tool when the customer says they're done shopping and wants to see their order summary.
-        This will retrieve all orders and format them for voice output.
-        
-        Returns:
-            Complete order summary with all items and total
-        """
-        logger.info("Getting complete order summary")
-        
-        from orders import list_orders
-        orders = list_orders()
-        
-        if not orders:
-            return "You haven't placed any orders yet. Would you like to browse our products?"
-        
-        # Format all orders for voice
-        summary = f"Here's your complete order summary. You placed {len(orders)} order{'s' if len(orders) > 1 else ''}.\n\n"
-        
-        grand_total = 0
-        all_items = []
-        
-        for order in orders:
-            items = order.get("items", [])
-            for item in items:
-                all_items.append(item)
-                grand_total += item.get("unit_price", 0) * item.get("quantity", 1)
-        
-        # List all items
-        for item in all_items:
-            name = item.get("product_name", "Unknown")
-            quantity = item.get("quantity", 1)
-            unit_price = item.get("unit_price", 0)
-            total_price = unit_price * quantity
-            
-            summary += f"{quantity} {name}"
-            if quantity > 1:
-                summary += f" at {unit_price} rupees each"
-            summary += f" for {total_price} rupees"
-            
-            # Add size/color if present
-            if "size" in item:
-                summary += f", size {item['size']}"
-            if "color" in item:
-                summary += f", {item['color']} color"
-            
-            summary += ". "
-        
-        summary += f"\n\nYour grand total is {grand_total} rupees. Thank you for shopping with us!"
-        
-        return summary
 
 
 def prewarm(proc: JobProcess):
@@ -386,7 +293,7 @@ async def entrypoint(ctx: JobContext):
 
     # Start the session, which initializes the voice pipeline and warms up the models
     await session.start(
-        agent=Assistant(),
+        agent=Assistant(room_name=ctx.room.name),
         room=ctx.room,
         room_input_options=RoomInputOptions(
             # For telephony applications, use `BVCTelephony` for best results
@@ -397,11 +304,35 @@ async def entrypoint(ctx: JobContext):
     # Join the room and connect to the user
     await ctx.connect()
     
-    # Send initial greeting
-    await session.say(
-        "Welcome to Voice Commerce! I'm your AI shopping assistant. I can help you browse our products, find what you're looking for, and place orders. We have mugs, t-shirts, hoodies, and accessories. What would you like to shop for today?",
-        allow_interruptions=True
-    )
+    # Get player name from remote participants (the user)
+    player_name = "Player"
+    
+    # Wait a moment for participants to connect
+    import asyncio
+    await asyncio.sleep(0.5)
+    
+    # Get the first remote participant (the user)
+    remote_participants = list(ctx.room.remote_participants.values())
+    if remote_participants:
+        user_participant = remote_participants[0]
+        if user_participant.name and user_participant.name != "user":
+            player_name = user_participant.name
+            logger.info(f"Got player name from participant: {player_name}")
+    
+    # Manually start the first round by calling the state management directly
+    # Initialize the game
+    start_game(ctx.room.name, player_name, max_rounds=3)
+    
+    # Get the first scenario
+    state, scenario = start_new_round(ctx.room.name, ALL_SCENARIOS)
+    
+    if scenario:
+        # Send greeting with player name and first scenario
+        scenario_text = scenario['scenario']
+        await session.say(
+            f"Welcome to Improv Battle, {player_name}! I'm your host, and we're about to have some fun. Let's kick off Round 1! {scenario_text}. Go!",
+            allow_interruptions=True
+        )
 
 
 if __name__ == "__main__":

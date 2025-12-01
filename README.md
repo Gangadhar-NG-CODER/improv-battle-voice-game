@@ -1,249 +1,273 @@
-# DAY 9: Voice Commerce - E-commerce Shopping Assistant 🛍️
+# 🎭 Improv Battle - Voice Improv Game Show
 
-[![Murf AI](https://img.shields.io/badge/Powered%20by-Murf%20Falcon%20TTS-10b981?style=for-the-badge)](https://murf.ai)
-[![LiveKit](https://img.shields.io/badge/Built%20with-LiveKit%20Agents-blue?style=for-the-badge)](https://livekit.io)
-[![Challenge](https://img.shields.io/badge/Challenge-Day%209%2F10-success?style=for-the-badge)](https://github.com/Gangadhar-NG-CODER)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![LiveKit](https://img.shields.io/badge/LiveKit-Agents-green)](https://livekit.io/)
 
-> **Part of the Murf AI Voice Agents Challenge** - Building 10 AI Voice Agents in 10 Days
+> **DAY 10 of the Murf AI Voice Agents Challenge**
+>
+> A voice-first improv game show where an AI host puts you through hilarious scenarios and reacts with honest, varied feedback. Think fast, act faster, make us laugh!
 
-## 🛒 About This Project
+![Improv Battle](https://img.shields.io/badge/Status-Production%20Ready-success)
 
-An **AI-powered voice shopping assistant** inspired by the Agentic Commerce Protocol (ACP). Shop naturally using your voice - browse products, get details, and place orders through conversational AI.
+## 🎬 What Is This?
 
-### The Experience
+**Improv Battle** is an interactive voice game where you perform short-form improv scenes while an AI host watches, reacts, and judges your performance. It's like being on a TV improv show, but powered by cutting-edge voice AI.
 
-Simply speak to browse our catalog of mugs, t-shirts, hoodies, and accessories. The AI assistant understands your preferences, helps you find products, and completes your order - all through natural voice conversation.
+### Game Flow
+
+1. **Welcome** - Host greets you and asks for your name
+2. **Round 1-3** - Host announces a wild scenario, you improvise, host reacts
+3. **Final Summary** - Host summarizes your improv style and performance
+
+### Example Scenarios
+
+- "You are a barista who has to tell a customer that their latte is actually a portal to another dimension."
+- "You are a time-travelling tour guide explaining modern smartphones to someone from the 1800s."
+- "You are a restaurant waiter who must calmly tell a customer that their order has escaped the kitchen."
 
 ## ✨ Features
 
-- 🎙️ **Voice-First Shopping** - Browse and order using natural speech
-- 🔍 **Smart Search** - Find products by category, price, color, or keywords
-- 📦 **Product Catalog** - 13+ products across multiple categories
-- 🛍️ **Easy Ordering** - Place orders with quantity and options (size, color)
-- 📋 **Order History** - View your last order details
-- ⚡ **Ultra-Fast TTS** - Powered by Murf Falcon (fastest TTS API)
-- 🤖 **AI-Powered** - Natural language understanding with Google Gemini
+### 🎭 AI Improv Host
+- High-energy, charismatic TV host personality
+- Varied reactions (amused, critical, surprised, teasing)
+- Honest but respectful feedback
+- Quick comedic timing
 
-## 🎯 Challenge Requirements Met
+### 🎤 Voice-First Experience
+- Natural conversation with AI
+- Real-time speech recognition
+- Ultra-fast TTS responses (Murf Falcon)
+- Smooth turn-taking
 
-✅ Voice-driven product browsing with filters  
-✅ ACP-inspired merchant layer (catalog + orders)  
-✅ Natural language product search  
-✅ Voice-based order placement  
-✅ Order persistence to JSON file  
-✅ View last order functionality  
-✅ Structured product and order data models
+### 🎬 20 Unique Scenarios
+- Wild, creative situations
+- Different difficulty levels
+- Never repeats in same session
+- Encourages character work
+
+### 🎨 Theatrical UI
+- Stage curtain design
+- Spotlight effects
+- Round indicator (theater lights)
+- Scenario cue cards
+- Audience silhouettes
 
 ## 🏗️ Tech Stack
 
-- **TTS**: Murf Falcon (fastest TTS API in the world)
-- **STT**: AssemblyAI
+### Backend
+- **Framework**: LiveKit Agents Python SDK
 - **LLM**: Google Gemini 2.5 Flash
-- **Framework**: LiveKit Agents (Python)
-- **Frontend**: Next.js 15 + React 19
-- **Backend**: Python 3.12 with uv package manager
-- **Data Storage**: JSON files
+- **TTS**: Murf Falcon (fastest TTS API)
+- **STT**: AssemblyAI
+- **Turn Detection**: Multilingual Model
 
-## 📁 Project Structure
-
-```
-DAY9/
-├── backend/
-│   ├── src/
-│   │   ├── agent.py          # Main agent with 5 function tools
-│   │   ├── catalog.py        # Product catalog management
-│   │   └── orders.py         # Order management
-│   ├── data/
-│   │   ├── products.json     # Product catalog (13 products)
-│   │   └── orders.json       # Persisted orders
-│   ├── .env.local            # API keys
-│   └── pyproject.toml        # Python dependencies
-├── frontend/
-│   ├── app/                  # Next.js app
-│   ├── components/
-│   │   └── app/
-│   │       ├── welcome-view.tsx      # E-commerce themed landing page
-│   │       ├── session-view.tsx      # Shopping conversation page
-│   │       └── shopping-overlay.tsx  # Status & interaction counter
-│   ├── app-config.ts         # Branding configuration
-│   └── package.json
-└── README.md
-```
-
-## 🎮 How It Works
-
-### The Shopping System
-
-The agent uses 5 function tools to handle e-commerce operations:
-
-1. **browse_products** - Filter by category, price range, color
-2. **search_products** - Search by keywords or description
-3. **get_product_details** - Get detailed product information
-4. **place_order** - Create orders with quantity and options
-5. **view_last_order** - Retrieve most recent order
-
-### Product Catalog
-
-**Categories:**
-- **Mugs** (3 items) - Ceramic, stainless steel, glass
-- **T-Shirts** (3 items) - Various colors and sizes
-- **Hoodies** (3 items) - Comfortable fleece options
-- **Accessories** (4 items) - Caps, bags, water bottles
-
-**Price Range:** ₹299 - ₹1,499 INR
-
-### Order Management
-
-Orders are persisted to `backend/data/orders.json` with:
-- Unique order ID (ORD-YYYYMMDDHHMMSS)
-- Line items with product details
-- Total amount and currency
-- Order status (CONFIRMED)
-- Timestamp
+### Frontend
+- **Framework**: Next.js 15 (App Router)
+- **UI**: React 19 + Tailwind CSS 4
+- **Voice SDK**: LiveKit Components React
+- **Animations**: CSS animations + transitions
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.12+ with [uv](https://docs.astral.sh/uv/) package manager
-- Node.js 18+ with pnpm
-- LiveKit Server (included in project)
+- Python 3.12+
+- Node.js 18+
+- pnpm (or npm)
+- [uv](https://docs.astral.sh/uv/) package manager
 
-### Setup & Run
-
-**1. Backend Setup**
+### 1. Clone and Setup
 
 ```bash
-cd DAY9/backend
+# Clone the repository
+git clone <your-repo-url>
+cd DAY10
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
 
 # Install dependencies
 uv sync
 
+# Copy environment variables
+cp .env.example .env.local
+
+# Edit .env.local with your API keys:
+# - LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET
+# - MURF_API_KEY
+# - ASSEMBLYAI_API_KEY
+# - GOOGLE_API_KEY
+
 # Download required models
 uv run python src/agent.py download-files
+
+# Run the agent
+uv run python src/agent.py dev
 ```
 
-**2. Frontend Setup**
+### 3. Frontend Setup
 
 ```bash
-cd DAY9/frontend
+cd frontend
 
 # Install dependencies
 pnpm install
-```
 
-**3. Run All Services**
+# Copy environment variables
+cp .env.example .env.local
 
-Open 3 terminals:
+# Edit .env.local with your LiveKit credentials
 
-```bash
-# Terminal 1 - LiveKit Server (Windows)
-cd DAY9/livekit_1.9.4_windows_amd64
-.\livekit-server.exe --dev
-
-# Terminal 2 - Backend Agent
-cd DAY9/backend
-uv run python src/agent.py dev
-
-# Terminal 3 - Frontend
-cd DAY9/frontend
+# Run the development server
 pnpm dev
 ```
 
-**4. Start Shopping**
+### 4. Play the Game
 
 1. Open http://localhost:3000 in your browser
-2. Click "🛍️ Start Shopping"
-3. Allow microphone access
-4. Start browsing and ordering!
+2. Enter your stage name
+3. Click "Take The Stage"
+4. Follow the host's instructions
+5. Improvise your heart out!
 
-## 🎮 Example Conversations
+## 📁 Project Structure
 
-**Browse Products:**
-- "Show me all mugs"
-- "Do you have t-shirts under 500 rupees?"
-- "I'm looking for a black hoodie"
-- "Show me accessories"
+```
+DAY10/
+├── backend/
+│   ├── src/
+│   │   ├── agent.py          # Main improv host agent
+│   │   └── improv_state.py   # Game state management
+│   ├── data/
+│   │   └── scenarios.json    # 20 improv scenarios
+│   ├── pyproject.toml
+│   └── README.md
+├── frontend/
+│   ├── app/
+│   │   ├── page.tsx          # Main entry
+│   │   └── session/page.tsx  # Game session
+│   ├── components/
+│   │   └── app/
+│   │       ├── welcome-view.tsx    # Theatrical welcome page
+│   │       └── stage-view.tsx      # Live performance stage
+│   ├── package.json
+│   └── README.md
+└── README.md
+```
 
-**Search Products:**
-- "Find me a travel mug"
-- "Do you have water bottles?"
-- "Show me cotton t-shirts"
+## 🎮 How to Play
 
-**Get Details:**
-- "Tell me more about the first mug"
-- "What sizes does the hoodie come in?"
-- "Does this come in blue?"
+### Tips for Great Improv
 
-**Place Order:**
-- "I'll buy the ceramic mug"
-- "Order 2 black t-shirts in size L"
-- "I want the grey hoodie in medium"
+1. **Commit to the character** - Go all in, don't hold back
+2. **Yes, and...** - Build on the scenario, don't deny it
+3. **Be specific** - Details make it funnier
+4. **React emotionally** - Show how your character feels
+5. **Have fun** - The host can tell when you're enjoying it
 
-**View Order:**
-- "What did I just buy?"
-- "Show me my last order"
+### Ending a Scene
 
-## 📊 Data Models
+- Say "End scene" when you're done
+- Or just pause and the host will react
+- Or let the host interrupt if they want
 
-### Product Schema
+### Early Exit
+
+- Say "stop game" or "end show" to quit early
+- Host will gracefully wrap up
+
+## 🎨 Customization
+
+### Add More Scenarios
+
+Edit `backend/data/scenarios.json`:
+
 ```json
 {
-  "id": "mug-001",
-  "name": "Ceramic Coffee Mug",
-  "description": "Classic white ceramic mug",
-  "price": 299,
-  "currency": "INR",
-  "category": "mug",
-  "attributes": {
-    "color": "white",
-    "material": "ceramic",
-    "capacity": "350ml"
-  }
+  "id": 21,
+  "scenario": "Your custom scenario here",
+  "difficulty": "medium"
 }
 ```
 
-### Order Schema
-```json
-{
-  "id": "ORD-20251130153000",
-  "items": [
-    {
-      "product_id": "mug-001",
-      "product_name": "Ceramic Coffee Mug",
-      "quantity": 2,
-      "unit_price": 299,
-      "currency": "INR"
-    }
-  ],
-  "total": 598,
-  "currency": "INR",
-  "status": "CONFIRMED",
-  "created_at": "2025-11-30T15:30:00Z"
-}
+### Change Round Count
+
+In `backend/src/agent.py`, modify:
+
+```python
+start_game(room_name, player_name, max_rounds=5)  # 5 rounds instead of 3
 ```
 
-## 🎬 Demo Video
+### Adjust Host Personality
 
-[🎥 Watch the Demo](#) *(Coming Soon)*
+Edit the system prompt in `backend/src/agent.py` under `Assistant` class.
 
-See the Voice Commerce agent in action!
+### Change UI Theme
 
-### Demo Highlights:
-- Voice-driven product browsing
-- Natural language search
-- Order placement with confirmation
-- Order persistence to JSON
-- Complete shopping experience
+Modify colors in `frontend/components/app/welcome-view.tsx` and `stage-view.tsx`.
 
-## 📝 What I Learned
+## 🧪 Testing
 
-- Implementing ACP-inspired commerce architecture
-- Separating conversation logic from commerce logic
-- Building structured product and order data models
-- Creating natural voice shopping experiences
-- Managing state and persistence in voice applications
-- Designing function tools for e-commerce operations
+### Backend Console Mode
+
+Test the agent without the frontend:
+
+```bash
+cd backend
+uv run python src/agent.py console
+```
+
+### Frontend Development
+
+```bash
+cd frontend
+pnpm dev
+```
+
+## 🚀 Deployment
+
+### Backend
+
+Deploy to LiveKit Cloud, AWS, GCP, or self-hosted servers.
+
+See [LiveKit deployment guide](https://docs.livekit.io/agents/ops/deployment/).
+
+### Frontend
+
+Deploy to Vercel, Netlify, or any Next.js hosting platform.
+
+```bash
+cd frontend
+pnpm build
+```
+
+## 📝 API Keys Required
+
+- **LiveKit**: Get from [LiveKit Cloud](https://cloud.livekit.io/)
+- **Murf AI**: Get from [Murf AI](https://murf.ai/)
+- **AssemblyAI**: Get from [AssemblyAI](https://www.assemblyai.com/)
+- **Google Gemini**: Get from [Google AI Studio](https://aistudio.google.com/)
+
+## 🤝 Contributing
+
+This project is part of the Murf AI Voice Agents Challenge. Feel free to:
+- Fork and adapt for your own games
+- Add new scenarios
+- Improve the UI
+- Share your performances!
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- Fork and adapt for your own games
+- Add new scenarios
+- Improve the UI
+- Share your performances!
 
 ## 👨‍💻 Author
 
@@ -251,34 +275,32 @@ See the Voice Commerce agent in action!
 - GitHub: [@Gangadhar-NG-CODER](https://github.com/Gangadhar-NG-CODER)
 - LinkedIn: [Connect with me](https://linkedin.com/in/gangadhar)
 
-## 🔗 Links
-
-- **Challenge**: [Murf AI Voice Agents Challenge](https://murf.ai)
-- **Project Repository**: [Voice Commerce Agent](https://github.com/Gangadhar-NG-CODER/voice-commerce)
-
-## 🏆 Challenge Progress
-
-- ✅ DAY 4: Teach-the-Tutor Active Recall Coach
-- ✅ DAY 6: ICICI Bank Fraud Alert Agent
-- ✅ DAY 7: Zepto Voice Shopping Agent
-- ✅ DAY 8: Voice Game Master (D&D Adventure)
-- ✅ **DAY 9: Voice Commerce (E-commerce Assistant)** ← You are here
-- ⏳ DAY 10: Coming soon...
-
-## 📚 Resources
-
-- [Murf Falcon TTS](https://murf.ai/api/docs/text-to-speech/streaming)
-- [LiveKit Agents](https://docs.livekit.io/agents)
-- [AssemblyAI STT](https://www.assemblyai.com/)
-- [Google Gemini](https://ai.google.dev/)
-- [Agentic Commerce Protocol](https://agentic-commerce.org/)
-
 ## 📄 License
 
-MIT License - See LICENSE file for details
+MIT License - See [LICENSE](LICENSE) file for details.
+
+## 🎬 Demo Video
+
+[Watch the demo on LinkedIn](#)
+
+## 🙏 Acknowledgments
+
+- **Murf AI** for the amazing Falcon TTS API
+- **LiveKit** for the voice agent framework
+- **Google Gemini** for the LLM
+- **AssemblyAI** for speech recognition
+
+## 📊 Project Stats
+
+- **Lines of Code**: ~3,000+
+- **Components**: 15+
+- **Scenarios**: 20 unique improv situations
+- **Development Time**: Day 10 of challenge
 
 ---
 
-**Built with ❤️ for the Murf AI Voice Agents Challenge**
+**Built with ❤️ for the Murf AI Voice Agents Challenge - Day 10**
 
-*#MurfAIVoiceAgentsChallenge #10DaysofAIVoiceAgents*
+*Think Fast. Act Faster. Make Us Laugh.* 🎭
+
+**Tags**: #MurfAIVoiceAgentsChallenge #10DaysofAIVoiceAgents #VoiceAI #ImprovComedy #LiveKit

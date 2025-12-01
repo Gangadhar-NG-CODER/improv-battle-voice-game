@@ -6,8 +6,6 @@ import type { AppConfig } from '@/app-config';
 import { ChatTranscript } from '@/components/app/chat-transcript';
 import { PreConnectMessage } from '@/components/app/preconnect-message';
 import { TileLayout } from '@/components/app/tile-layout';
-import { ShoppingOverlay } from '@/components/app/shopping-overlay';
-import { OrderSummaryPopup } from '@/components/app/order-summary-popup';
 import {
   AgentControlBar,
   type ControlBarControls,
@@ -17,6 +15,7 @@ import { useConnectionTimeout } from '@/hooks/useConnectionTimout';
 import { useDebugMode } from '@/hooks/useDebug';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '../livekit/scroll-area/scroll-area';
+import { useVoiceAssistant } from '@livekit/components-react';
 
 const MotionBottom = motion.create('div');
 
@@ -60,6 +59,7 @@ export function Fade({ top = false, bottom = false, className }: FadeProps) {
     />
   );
 }
+
 interface SessionViewProps {
   appConfig: AppConfig;
 }
@@ -74,6 +74,7 @@ export const SessionView = ({
   const messages = useChatMessages();
   const [chatOpen, setChatOpen] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const { state } = useVoiceAssistant();
 
   const controls: ControlBarControls = {
     leave: true,
@@ -92,13 +93,43 @@ export const SessionView = ({
     }
   }, [messages]);
 
-  return (
-    <section className="bg-background relative z-10 h-full w-full overflow-hidden" {...props}>
-      {/* Shopping Overlay - Interaction Counter & Status */}
-      <ShoppingOverlay messages={messages} />
+  // Status indicator
+  const getStatusInfo = () => {
+    switch (state) {
+      case 'speaking':
+        return { icon: '🎭', label: 'Host is speaking', color: 'bg-purple-500' };
+      case 'listening':
+        return { icon: '🎤', label: 'Your turn', color: 'bg-green-500' };
+      case 'thinking':
+        return { icon: '🤔', label: 'Thinking', color: 'bg-yellow-500' };
+      default:
+        return { icon: '⏸️', label: 'Ready', color: 'bg-slate-500' };
+    }
+  };
 
-      {/* Order Summary Popup */}
-      <OrderSummaryPopup messages={messages} />
+  const statusInfo = getStatusInfo();
+
+  return (
+    <section
+      className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative z-10 h-full w-full overflow-hidden"
+      {...props}
+    >
+      {/* Status indicator - top right */}
+      <div className="absolute right-6 top-6 z-20">
+        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-4 py-2 backdrop-blur-xl">
+          <div className={`h-2 w-2 rounded-full ${statusInfo.color} animate-pulse`}></div>
+          <span className="text-sm font-medium text-white">{statusInfo.label}</span>
+          <span className="text-lg">{statusInfo.icon}</span>
+        </div>
+      </div>
+
+      {/* Branding - top left */}
+      <div className="absolute left-6 top-6 z-20">
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 backdrop-blur-xl">
+          <span className="text-lg">🎭</span>
+          <span className="text-sm font-bold text-white">Improv Battle</span>
+        </div>
+      </div>
 
       {/* Chat Transcript */}
       <div

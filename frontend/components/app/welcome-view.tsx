@@ -1,35 +1,5 @@
+import React from 'react';
 import { Button } from '@/components/livekit/button';
-
-function WelcomeImage() {
-  return (
-    <svg
-      width="80"
-      height="80"
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="drop-shadow-xl"
-    >
-      {/* Shopping bag */}
-      <path
-        d="M16 20L12 56H52L48 20H16Z"
-        stroke="#10b981"
-        strokeWidth="3"
-        fill="rgba(16, 185, 129, 0.1)"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M22 20V16C22 10.5 26.5 6 32 6C37.5 6 42 10.5 42 16V20"
-        stroke="#10b981"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="24" cy="32" r="2" fill="#34d399" />
-      <circle cx="40" cy="32" r="2" fill="#34d399" />
-    </svg>
-  );
-}
 
 interface WelcomeViewProps {
   startButtonText: string;
@@ -41,82 +11,197 @@ export const WelcomeView = ({
   onStartCall,
   ref,
 }: React.ComponentProps<'div'> & WelcomeViewProps) => {
+  const [name, setName] = React.useState('');
+
   return (
-    <div ref={ref} className="relative min-h-screen overflow-hidden bg-slate-950">
-      {/* Animated background */}
+    <div
+      ref={ref}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950"
+    >
+      {/* Animated mesh gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-purple-600/30 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-pink-600/30 blur-3xl animate-pulse [animation-delay:1.5s]"></div>
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/20 blur-3xl animate-pulse [animation-delay:3s]"></div>
       </div>
 
-      <section className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-8">
-        <div className="w-full max-w-4xl space-y-8">
-          {/* Header Section */}
-          <div className="text-center space-y-4">
-            <div className="flex justify-center mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-emerald-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-                <WelcomeImage />
-              </div>
-            </div>
-            
-            <h1 className="text-6xl md:text-7xl font-black text-white">
-              VOICE COMMERCE
-            </h1>
-            
-            <p className="text-xl text-emerald-300 font-medium">
-              Shop Smarter with AI Voice Assistant
-            </p>
-          </div>
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
 
-          {/* Main Content Card */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-emerald-500/20 shadow-2xl">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center space-y-2">
-                <div className="text-5xl mb-2">🎤</div>
-                <h3 className="text-white font-bold">Speak Naturally</h3>
-                <p className="text-emerald-300 text-sm">Just talk to browse and order products</p>
-              </div>
-              
-              <div className="text-center space-y-2">
-                <div className="text-5xl mb-2">🤖</div>
-                <h3 className="text-white font-bold">AI Assistant</h3>
-                <p className="text-emerald-300 text-sm">Powered by Murf Falcon TTS</p>
-              </div>
-              
-              <div className="text-center space-y-2">
-                <div className="text-5xl mb-2">⚡</div>
-                <h3 className="text-white font-bold">Instant Orders</h3>
-                <p className="text-emerald-300 text-sm">Fast, seamless checkout</p>
+      {/* Main content */}
+      <div className="relative z-10 w-full max-w-3xl px-6">
+        {/* Header */}
+        <div className="mb-10 text-center">
+          {/* Icon */}
+          <div className="mb-6 flex justify-center">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 blur-2xl opacity-50"></div>
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600 shadow-2xl">
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M32 8C20 8 12 16 12 28C12 36 16 42 22 46C24 47 26 48 28 48C30 48 32 47 32 45C32 43 30 42 28 42C26 42 24 41 22 40C18 37 16 33 16 28C16 19 22 12 32 12C42 12 48 19 48 28C48 33 46 37 42 40C40 41 38 42 36 42C34 42 32 43 32 45C32 47 34 48 36 48C38 48 40 47 42 46C48 42 52 36 52 28C52 16 44 8 32 8Z"
+                    fill="white"
+                  />
+                  <circle cx="24" cy="26" r="3" fill="#fbbf24" />
+                  <circle cx="40" cy="26" r="3" fill="#fbbf24" />
+                  <path
+                    d="M22 34C24 38 28 40 32 40C36 40 40 38 42 34"
+                    stroke="#fbbf24"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className="flex justify-center">
-            <Button 
-              variant="primary" 
-              size="lg" 
-              onClick={onStartCall} 
-              className="group relative px-16 py-5 text-2xl font-black bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl shadow-2xl shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300"
-            >
-              <span className="relative z-10">🛍️ {startButtonText}</span>
-              <div className="absolute inset-0 bg-emerald-400 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity"></div>
-            </Button>
-          </div>
+          {/* Title */}
+          <h1 className="mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-6xl font-black tracking-tight text-transparent md:text-7xl">
+            Improv Battle
+          </h1>
+          <p className="text-xl font-medium text-purple-200/80">
+            Think Fast. Act Faster. Make Us Laugh.
+          </p>
+        </div>
 
-          {/* Product Categories */}
-          <div className="text-center">
-            <p className="text-emerald-300 text-sm mb-3">Available Products</p>
-            <div className="flex justify-center gap-3 flex-wrap">
-              <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm border border-emerald-500/30">☕ Mugs</span>
-              <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm border border-emerald-500/30">👕 T-Shirts</span>
-              <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm border border-emerald-500/30">🧥 Hoodies</span>
-              <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm border border-emerald-500/30">🎒 Accessories</span>
+        {/* Main card */}
+        <div className="group relative">
+          {/* Glow effect */}
+          <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 blur-xl transition duration-1000 group-hover:opacity-30"></div>
+
+          {/* Card content */}
+          <div className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-8 shadow-2xl backdrop-blur-2xl md:p-10">
+            {/* Features */}
+            <div className="mb-8 grid grid-cols-4 gap-3">
+              <div className="group/item relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-4 transition-all hover:scale-105 hover:border-purple-500/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/10 opacity-0 transition-opacity group-hover/item:opacity-100"></div>
+                <div className="relative flex flex-col items-center gap-2">
+                  <div className="text-3xl">🎤</div>
+                  <p className="text-xs font-semibold text-white/90">Voice First</p>
+                </div>
+              </div>
+
+              <div className="group/item relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-pink-500/10 to-transparent p-4 transition-all hover:scale-105 hover:border-pink-500/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-pink-500/10 opacity-0 transition-opacity group-hover/item:opacity-100"></div>
+                <div className="relative flex flex-col items-center gap-2">
+                  <div className="text-3xl">🎭</div>
+                  <p className="text-xs font-semibold text-white/90">Wild Scenarios</p>
+                </div>
+              </div>
+
+              <div className="group/item relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-transparent p-4 transition-all hover:scale-105 hover:border-indigo-500/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-indigo-500/10 opacity-0 transition-opacity group-hover/item:opacity-100"></div>
+                <div className="relative flex flex-col items-center gap-2">
+                  <div className="text-3xl">⚡</div>
+                  <p className="text-xs font-semibold text-white/90">Real Reactions</p>
+                </div>
+              </div>
+
+              <div className="group/item relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent p-4 transition-all hover:scale-105 hover:border-purple-500/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/10 opacity-0 transition-opacity group-hover/item:opacity-100"></div>
+                <div className="relative flex flex-col items-center gap-2">
+                  <div className="text-3xl">🎬</div>
+                  <p className="text-xs font-semibold text-white/90">3 Rounds</p>
+                </div>
+              </div>
+            </div>
+
+            {/* How it works */}
+            <div className="mb-8 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-transparent p-6 backdrop-blur-sm">
+              <h2 className="mb-5 text-center text-lg font-bold text-white">How It Works</h2>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white shadow-lg">
+                    1
+                  </div>
+                  <p className="pt-1 text-sm leading-relaxed text-white/80">
+                    Host sets up a wild improv scenario
+                  </p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white shadow-lg">
+                    2
+                  </div>
+                  <p className="pt-1 text-sm leading-relaxed text-white/80">
+                    You improvise the character and situation
+                  </p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white shadow-lg">
+                    3
+                  </div>
+                  <p className="pt-1 text-sm leading-relaxed text-white/80">
+                    Host reacts with honest feedback and moves on
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="space-y-5">
+              <div>
+                <label htmlFor="name" className="mb-2 block text-sm font-semibold text-white/90">
+                  Your Stage Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-14 w-full rounded-xl border border-white/20 bg-white/10 px-5 text-lg text-white placeholder:text-white/40 backdrop-blur-sm transition-all focus:border-purple-500 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  required
+                />
+              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => {
+                  if (name.trim()) {
+                    localStorage.setItem('playerName', name.trim());
+                    onStartCall();
+                  }
+                }}
+                disabled={!name.trim()}
+                className="group/btn relative h-16 w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-lg font-bold text-white shadow-2xl shadow-purple-500/50 transition-all hover:scale-[1.02] hover:shadow-purple-500/70 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 transition-opacity group-hover/btn:opacity-100"></div>
+                <span className="relative flex items-center justify-center gap-3">
+                  <span className="text-2xl">🎤</span>
+                  <span>Start Improv Battle</span>
+                  <svg
+                    className="h-5 w-5 transition-transform group-hover/btn:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </span>
+              </Button>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-6 text-center">
+              <p className="text-xs font-medium text-white/50">
+                Powered by Murf Falcon TTS • The Fastest Voice AI
+              </p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'Voice Commerce',
-  pageTitle: 'Voice Shopping Assistant - AI E-commerce',
-  pageDescription: 'Shop with your voice using AI - Browse, search, and order products',
+  companyName: 'Improv Battle',
+  pageTitle: 'Improv Battle - Voice Improv Game Show',
+  pageDescription: 'Think fast, act faster, make us laugh - AI-powered improv game',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#10b981',
+  accent: '#9333ea',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#34d399',
-  startButtonText: 'Start Shopping',
+  accentDark: '#a855f7',
+  startButtonText: 'Take The Stage',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,
